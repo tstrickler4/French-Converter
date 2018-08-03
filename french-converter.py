@@ -18,13 +18,13 @@ nowhere near perfect, so if you notice any issues, let me know.
 
 Output: The input word will go through 6 stages: original interpretation,
 Western Romance, Gallo-Ibero-Romance, Proto-French, Old French, the finally
-Modern French. The actually resulting spelling will have to be interpreted from
+Modern French. The actual resulting spelling will have to be interpreted from
 the result because I figured the spelling would be dependent on the input
 language. The output can also be adjusted slightly depending on if you allow the
 first lenition to occur before or after the first vowel loss in the
 Gallo-Ibero-Romance phase. In real French it was variable, but according to the
 Wikipedia page, the standard was for lenition to occur before vowel loss, with
-instance of the opposite being observed, so that's how I coded it. If you like
+instances of the opposite being observed, so that's how I coded it. If you like
 the output better the other way, you can swap the steps by setting the optional
 swap parameter to True (the default is False).
 
