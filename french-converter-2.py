@@ -26,11 +26,10 @@ them.
 
 Some notes for use:
     1. You'll notice that the functions for each of the stages of development
-       have two optional parameters: showprev and showall. If showprev is set to
-       True, it will run and print all previous stages. If showall is set to
-       True, it will run each individual sound change mentioned during that
-       stage only. Probably not the best parameter name since the "all" part
-       might lead to a little confusion, but it is what it is.
+       have two optional parameters: show and showsteps. If show is set to True,
+       it will run and print itself and all previous stages. If showsteps is set
+       to True, it will print out every individual sound change. Beware this one
+       because it will spit out A LOT of data.
     2. Regarding the format of the input, you can indicate long vowels by
        following them with a ":", and you can indicate stressed vowels by
        preceding them with a "!". Note that the "!" DOES NOT precede the entire
@@ -48,6 +47,9 @@ Some notes for use:
        difficult to predict possible resulting consonant clusters and when and
        where schwas need to be inserted. As such, if your heart says there
        should be a schwa in there, it's probably right.
+    6. I've also included a run_tests function to provide an easy method of
+       testing several words at once. If you wish to use it, just follow the
+       format of the provided tests.
 
 Let me know if you find any bugs or have any information on how I might improve
 the progam.
@@ -61,7 +63,7 @@ def printif(show, val):
     if show:
         print(val, end=" ")
 
-def setup(word):
+def setup(word, show=True):
     # simplify orthography
     new_word = word
     new_word = re.sub(r"c", r"k", new_word)
@@ -76,15 +78,14 @@ def setup(word):
     new_word = re.sub(r"(!?)i(?=[aeiouy!])", r"j\1", new_word)
     new_word = re.sub(r"(?<=[aeiouy:])u(!?)(?=[aeiouy!])", r"w", new_word)
     new_word = re.sub(r"au", r"aw", new_word)
+    printif(show, new_word)
     return new_word
 
 
 
-def to_proto_western_romance(word, showprev=True, showsteps=False):
+def to_proto_western_romance(word, show=True, showsteps=False):
 
-    new_word = setup(word)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = setup(word, show)
 
     # introduction of short /i/ at beginning before /s/ + C
     new_word = re.sub(r"^(s[bdfgGhkKlmnprstvz])", r"i\1", new_word)
@@ -159,15 +160,15 @@ def to_proto_western_romance(word, showprev=True, showsteps=False):
     new_word = re.sub(r"[dg]ʲ", r"J", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_proto_gallo_ibero_romance(word, showprev=True, showsteps=False):
+def to_proto_gallo_ibero_romance(word, show=True, showsteps=False):
 
-    new_word = to_proto_western_romance(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_proto_western_romance(word, show, showsteps)
 
     # /kʲ/, /tʲ/ > /tsʲ/
     new_word = re.sub(r"kkʲ", r"ttsʲ", new_word)
@@ -262,15 +263,15 @@ def to_proto_gallo_ibero_romance(word, showprev=True, showsteps=False):
     new_word = re.sub(r"lʎ", r"ʎʎ", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_early_old_french(word, showprev=True, showsteps=False):
+def to_early_old_french(word, show=True, showsteps=False):
 
-    new_word = to_proto_gallo_ibero_romance(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_proto_gallo_ibero_romance(word, show, showsteps)
 
     # initial /j/ and /j/ when following a consonant and which stems from /dj/,
     # /gj/, or /g(e,i)/> /dʒ/
@@ -486,15 +487,15 @@ def to_early_old_french(word, showprev=True, showsteps=False):
     new_word = re.sub(r"w(!?)ɔj", r"\1uj", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_old_french(word, showprev=True, showsteps=False):
+def to_old_french(word, show=True, showsteps=False):
 
-    new_word = to_early_old_french(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_early_old_french(word, show, showsteps)
 
     # loss of /f/, /p/, /k/ before final /s/, /t/
     new_word = re.sub(r"[fpk](?=[st]$)", r"", new_word)
@@ -559,15 +560,15 @@ def to_old_french(word, showprev=True, showsteps=False):
     new_word = re.sub(r"([uiy]w?j?)(?=[nmɲ])", r"\1ñ", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_late_old_french(word, showprev=True, showsteps=False):
+def to_late_old_french(word, show=True, showsteps=False):
 
-    new_word = to_old_french(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_old_french(word, show, showsteps)
 
     # /l/ > /w/ before consonants (except /la/)
     # SPECULATION: It looks like preceding /ɛ/ > /ɛa/ when this change occurs
@@ -642,16 +643,15 @@ def to_late_old_french(word, showprev=True, showsteps=False):
     new_word = re.sub(r"h", r"", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_middle_french(word, showprev=True, showsteps=False):
+def to_middle_french(word, show=True, showsteps=False):
 
-
-    new_word = to_late_old_french(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_late_old_french(word, show, showsteps)
 
     # /aw/ > /o/, /ɛaw/ > /o/, /ɛw/ > /œ/, /ɔw/ > /u/, /wɛw/ > /œ/, /ow/ > /u/
     # (these mostly result from V + /l/ + C)
@@ -697,15 +697,15 @@ def to_middle_french(word, showprev=True, showsteps=False):
     new_word = re.sub(r"(?<=ñ)[nmɲ]", r"", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_early_modern_french(word, showprev=True, showsteps=False):
+def to_early_modern_french(word, show=True, showsteps=False):
 
-    new_word = to_middle_french(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_middle_french(word, show, showsteps)
 
     # /wɛ/ > /wa/ (blocked by nasalization)
     # SPECULATION: It may also occasionally become /ɛ/, but it's unclear exactly
@@ -726,15 +726,15 @@ def to_early_modern_french(word, showprev=True, showsteps=False):
     new_word = re.sub(r"([aeiouyɛEɔɑœǝ]ñ?[bdfgjklmnprstvwzɲʎʃʒ]*!?[eɛE])r$", r"\1", new_word)
     printif(showsteps, new_word)
 
+    printif(show, new_word)
+
     return new_word
 
 
 
-def to_modern_french(word, showprev=True, showsteps=False):
+def to_modern_french(word, show=True, showsteps=False):
 
-    new_word = to_early_modern_french(word, showprev)
-    if showprev:
-        print(new_word, end=" ")
+    new_word = to_early_modern_french(word, show, showsteps)
 
     # /r/ > /ʁ/
     new_word = re.sub(r"r", r"ʁ", new_word)
@@ -774,8 +774,7 @@ def to_modern_french(word, showprev=True, showsteps=False):
     new_word = re.sub(r"E", r"ɛ", new_word)
     printif(showsteps, new_word)
 
-    if showprev:
-        print(new_word)
+    printif(show, new_word)
 
     return new_word
 
@@ -959,7 +958,7 @@ def run_tests():
 
     passed = True
     for i in tests:
-        if to_modern_french(i[0], False, False) != i[1]:
+        if to_modern_french(i[0], False) != i[1]:
             print(f"failed: {i[0]} > {i[1]}")
             passed = False
 
